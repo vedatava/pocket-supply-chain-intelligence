@@ -1,3 +1,36 @@
+"""Pocket Supply Chain Intelligence — independent synthetic-data portfolio demo."""
+from pathlib import Path
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import streamlit as st
+
+st.set_page_config(page_title="Pocket | Supply Chain Intelligence", page_icon="📦", layout="wide", initial_sidebar_state="expanded")
+ROOT = Path(__file__).parent / "data"
+
+st.markdown("""<style>
+.block-container{max-width:1450px;padding-top:1.6rem;padding-bottom:3rem}
+[data-testid="stAppViewContainer"]{background:#f6f8fc;color:#17243a}
+[data-testid="stSidebar"]{background:#ffffff;border-right:1px solid #e5eaf2}
+h1,h2,h3{letter-spacing:-.035em;color:#17243a}
+h1{font-size:2.1rem !important}
+[data-testid="stMetric"]{background:white;border:1px solid #e5eaf2;padding:18px 19px;border-radius:15px;box-shadow:0 4px 15px #17243a08}
+[data-testid="stMetricLabel"]{color:#58677d}
+[data-testid="stMetricValue"]{font-size:1.75rem}
+div[data-testid="stAlert"]{border-radius:12px}
+.note{padding:13px 16px;border:1px solid #dbe4f1;border-radius:12px;background:#edf3ff;font-size:.91rem;color:#344762;margin:.8rem 0}
+.brand{font-size:1.05rem;font-weight:750;letter-spacing:-.035em;color:#182a4f}
+.kicker{color:#526683;font-size:.9rem;margin-bottom:1rem}
+</style>""", unsafe_allow_html=True)
+
+@st.cache_data
+def get_data(filename):
+    path = ROOT / (filename + ".csv")
+    if not path.exists():
+        st.error(f"Missing file: data/{filename}.csv. Keep all CSV datasets inside the data/ folder in GitHub.")
+        st.stop()
+    return pd.read_csv(path)
+
 forecast = get_data("demand_forecast")
 backtest = get_data("forecast_backtest")
 planning = get_data("inventory_planning")
@@ -189,3 +222,12 @@ elif page == "Fulfillment & Costs":
     chart(fig)
     st.subheader('3PL / FBA scorecard')
     table(fulfillment)
+    st.info('The delivery completion rate is the percentage marked Delivered at this snapshot, **not** on-time delivery. Data contains only eight simulated shipments and excludes storage and FBA service fees.')
+
+else:
+    st.header('Methodology & limitations')
+    st.markdown('''**What the prototype demonstrates**\n\n- Synthetic sales generated across two illustrative SKUs and four sales channels.\n- Weekly baseline projections from a 4-week moving average, compared with linear trend on historical backtests.\n- Lead-time demand, simplified 7-day safety stock, reorder points, and 60-day inventory projection.\n- Purchase-order feasibility screening, demand-spike and supplier-delay stress tests.\n- FBA replenishment, cost-first warehouse transfers, and a sample fulfillment scorecard.\n\n**Limitations that matter before real operations**\n\n- The 12-week forecast has **not** been validated at a 12-week horizon; 3.89% WAPE applies only to a synthetic one-week rolling test.\n- Warehouse and supply records are an illustrative snapshot, not connected to live systems.\n- Demand forecasts, inbound orders, SKU quantities and costs use simplifying assumptions.\n- Mitigation units assume stock exists immediately; they are **not executable orders**.\n- FBA allocation omits Amazon receiving time, regional destination demand and some fees.\n- Fulfillment data is too small to establish actual warehouse efficiency.\n- The forecast and inventory simulations use different simplified horizons/assumptions; future work should reconcile these in one integrated planner.\n''')
+    st.caption('Designed to demonstrate analytical thinking and decision trade-offs—not to represent or impersonate Pocket operational software.')
+
+st.divider()
+st.caption('INDEPENDENT PORTFOLIO PROJECT · ALL DATA SIMULATED · NOT AFFILIATED WITH POCKET · Developed as a supply chain analytics case study')
