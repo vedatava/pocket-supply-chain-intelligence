@@ -1,0 +1,3 @@
+sku,units_sold,avg_daily_demand,lead_time_days,safety_stock_days,moq_units,lead_time_demand,safety_stock,reorder_point,available_stock,incoming_units,inventory_position,days_of_coverage,additional_units_needed,recommendation
+POCKET-BLK,122472,4374.0,20,7,1000,87480,30618,118098,95060,130000,225060,21.73,0,NO NEW ORDER NEEDED
+POCKET-SLV,52793,1885.4642857142858,20,7,1000,37709,13198,50907,44480,40000,84480,23.59,0,NO NEW ORDER NEEDED
