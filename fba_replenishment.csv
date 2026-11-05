@@ -1,3 +1,0 @@
-sku,on_hand,reserved,damaged,available_stock,forecast_units,daily_demand,target_coverage_days,safety_stock_days,transfer_lead_time_days,target_stock,days_of_coverage,transfer_units,transfer_status
-POCKET-BLK,25000,1200,60,23740,146964,1749.5714285714287,30,7,5,52488.0,13.57,28748,PLAN FBA TRANSFER
-POCKET-SLV,12000,600,30,11370,63372,754.4285714285714,30,7,5,22633.0,15.07,11263,PLAN FBA TRANSFER
