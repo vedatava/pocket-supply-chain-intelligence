@@ -1,0 +1,4 @@
+sku,source_warehouse,destination,transfer_units,cost_per_unit,estimated_transfer_cost
+POCKET-BLK,WH-CA,AMAZON-FBA,27114,1.2,32536.8
+POCKET-BLK,WH-NJ,AMAZON-FBA,1634,1.8,2941.2
+POCKET-SLV,WH-CA,AMAZON-FBA,11263,1.2,13515.6
