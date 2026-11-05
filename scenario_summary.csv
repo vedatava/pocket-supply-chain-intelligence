@@ -1,7 +1,0 @@
-scenario,sku,minimum_stock,unmet_demand,days_below_safety
-30% Demand Spike,POCKET-BLK,0.0,48111.99999999989,20
-30% Demand Spike,POCKET-SLV,0.0,20586.21428571423,20
-7-Day Supplier Delay,POCKET-BLK,6360.0,0.0,6
-7-Day Supplier Delay,POCKET-SLV,3405.035714285776,0.0,6
-Baseline,POCKET-BLK,30620.0,0.0,0
-Baseline,POCKET-SLV,13352.14285714296,0.0,0
