@@ -1,4 +1,4 @@
-# 📦 Pocket AI — Supply Chain Intelligence & Inventory Optimization
+# 📦  Inspired by Pocket AI — Supply Chain Intelligence & Inventory Optimization
 
 ### End-to-End Supply Chain Analytics | Python • SQL • Forecasting • Streamlit
 
