@@ -60,7 +60,7 @@ PALETTE = [BLUE, "#62a9ed", ORANGE, RED, GREEN]
 
 st.sidebar.markdown('<div class="brand">◈ POCKET / OPS LAB</div>', unsafe_allow_html=True)
 st.sidebar.caption("Independent analytical prototype")
-page = st.sidebar.radio("WORKSPACE", ["Executive Overview", "Demand Forecast", "Inventory & Purchase Orders", "Amazon FBA & Warehouses", "Fulfillment & Costs", "Financial Impact & Working Capital", "Methodology & Limitations"])
+page = st.sidebar.radio("WORKSPACE", ["Executive Overview", "Demand Forecast", "Inventory & Purchase Orders", "Amazon FBA & Warehouses", "Fulfillment & Costs", "Methodology & Limitations"])
 sku_options = ["All products"] + sorted(planning['sku'].dropna().unique().tolist())
 selected_sku = st.sidebar.selectbox("Product / colorway", sku_options)
 st.sidebar.markdown("---")
@@ -223,61 +223,6 @@ elif page == "Fulfillment & Costs":
     st.subheader('3PL / FBA scorecard')
     table(fulfillment)
     st.info('The delivery completion rate is the percentage marked Delivered at this snapshot, **not** on-time delivery. Data contains only eight simulated shipments and excludes storage and FBA service fees.')
-
-elif page == "Financial Impact & Working Capital":
-    st.header("Financial impact & working capital")
-    st.caption("Scenario economics with adjustable hypothetical assumptions. Figures are not actual Pocket financials.")
-
-    with st.expander("Adjust assumptions", expanded=True):
-        cost_col, price_col, hold_col = st.columns(3)
-        with cost_col:
-            unit_cost = st.number_input("Unit acquisition cost ($)", min_value=0.0, value=45.0, step=1.0)
-        with price_col:
-            unit_price = st.number_input("Illustrative selling price ($)", min_value=0.0, value=129.0, step=1.0)
-        with hold_col:
-            annual_holding_pct = st.slider("Annual inventory holding rate (%)", min_value=0, max_value=50, value=20)
-
-    available_units = float(p['available_stock'].sum())
-    po_units = float(o['recommended_units'].sum())
-    spike_units = float(spike['unmet_demand'].sum())
-    inventory_value = available_units * unit_cost
-    po_investment = po_units * unit_cost
-    gross_sales_exposure = spike_units * unit_price
-    holding_30d = inventory_value * (annual_holding_pct / 100) * 30 / 365
-    fba_transfer_cost = float(a['estimated_transfer_cost'].sum())
-
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Available inventory value", fmtmoney(inventory_value))
-    c2.metric("Proposed PO investment", fmtmoney(po_investment))
-    c3.metric("30% spike: gross sales exposure", fmtmoney(gross_sales_exposure))
-    c4, c5 = st.columns(2)
-    c4.metric("Estimated 30-day holding cost", fmtmoney(holding_30d))
-    c5.metric("Estimated FBA transfer cost", fmtmoney(fba_transfer_cost))
-
-    st.subheader("Financial drivers by SKU")
-    sku_financials = p[['sku', 'available_stock']].copy()
-    sku_financials = sku_financials.merge(o[['sku', 'recommended_units']], on='sku', how='left')
-    spike_by_sku = spike[['sku', 'unmet_demand']].copy()
-    sku_financials = sku_financials.merge(spike_by_sku, on='sku', how='left').fillna(0)
-    sku_financials['inventory_value_usd'] = sku_financials['available_stock'] * unit_cost
-    sku_financials['po_investment_usd'] = sku_financials['recommended_units'] * unit_cost
-    sku_financials['gross_sales_exposure_usd'] = sku_financials['unmet_demand'] * unit_price
-    table(sku_financials)
-
-    st.subheader("Inventory and purchasing commitments")
-    comparisons = pd.DataFrame({
-        'Category': ['Available inventory value', 'Proposed purchase-order value', '30-day holding cost', 'FBA transfer cost'],
-        'USD': [inventory_value, po_investment, holding_30d, fba_transfer_cost]
-    })
-    fig = px.bar(comparisons, x='Category', y='USD', color='Category', text='USD', color_discrete_sequence=PALETTE)
-    fig.update_traces(texttemplate='$%{text:,.0f}', textposition='outside')
-    fig.update_layout(showlegend=False, xaxis_title='', yaxis_title='Simulated USD')
-    chart(fig)
-
-    st.subheader("Executive interpretation")
-    st.warning("Gross sales exposure is **not** realized lost revenue or profit. Unmet demand may be delayed, substituted, or recovered. Actual impact depends on conversion, margins, and customer behavior.")
-    st.info("Inventory value measures capital currently in stock. Proposed PO investment is a separate future cash commitment; neither is automatically an expense. The 30-day carrying estimate applies only to current available stock.")
-    st.success("Decision to investigate: Compare the cost and feasibility of earlier replenishment against the simulated shortage exposure, while preserving liquidity and warehouse service levels.")
 
 else:
     st.header('Methodology & limitations')
